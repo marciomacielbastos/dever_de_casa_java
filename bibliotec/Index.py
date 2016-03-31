@@ -20,10 +20,10 @@ while True:
             for book in books.keys():
                 print book, books[book]
             print "========================================================"
-            time.sleep(86400)
+            time.sleep(60000)
         else:
             print "Too early"
-            time.sleep(86400)
+            time.sleep(60000)
 
         for book in books.keys():
             if books[book] <= 1:
