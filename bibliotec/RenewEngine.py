@@ -39,17 +39,33 @@ class RenewEngine:
         self.table_books = table_rows = self.driver.find_elements_by_xpath(self.basepath+'tr')
         return table_rows
 
-    def get_date_of_one_book(self, row):
-        table_row = self.table_books[row]
-        return table_row.find_elements_by_tag_name('td')[7].text
+    def get_date_of_a_book(self, row):
+        book = self.table_books[row]
+        return book.find_elements_by_tag_name('td')[7].text
+
+    def get_name_of_a_book(self, row):
+        book = self.table_books[row]
+        return book.find_elements_by_tag_name('td')[2].text.strip()
+
+    @staticmethod
+    def str_to_date(str_date):
+        return datetime.datetime.strptime(str_date.strip(), '%d/%m/%y').date()
 
     def get_older_book(self):
         num_books = len(self.table_books)
-        date_min = self.get_date_of_one_book(1).strip()
-        date_min = datetime.datetime.strptime(date_min, '%d/%m/%y').date()
+        date_min = self.str_to_date(self.get_date_of_a_book(1))
         for i in range(1, num_books-2):
-            d = self.get_date_of_one_book(i+1).strip()
-            d = datetime.datetime.strptime(d, '%d/%m/%y').date()
+            d = self.str_to_date(self.get_date_of_a_book(i + 1))
             if date_min >= d:
                 date_min = d
         return date_min
+
+    def get_list_of_expired_books(self, today):
+        expired_books = []
+        for book in range(1, len(self.table_books)):
+            expire_date = self.str_to_date(self.get_date_of_a_book(book))
+            if today >= expire_date:
+                expired_books.append(book)
+            else:
+                pass
+        return expired_books
