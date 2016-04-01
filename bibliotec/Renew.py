@@ -31,6 +31,9 @@ class Renew:
             self.driver.quit()
             return False
 
+    def get_early_date(self, num):
+        return self.renew_object.get_date_of_a_book(num)
+
     def check_deadline_element_wise(self):
         today = date.today() + timedelta(days=0)
         expired_books = self.renew_object.get_list_of_expired_books(today)
@@ -40,11 +43,12 @@ class Renew:
                 self.renew_object.check_one(book)
                 books.append(self.renew_object.get_name_of_a_book(book))
             self.renew()
-            self.driver.quit()
             return books
         else:
-            self.driver.quit()
             return books
 
     def renew(self):
         self.renew_object.submit_renew()
+
+    def quit(self):
+        self.driver.quit()
